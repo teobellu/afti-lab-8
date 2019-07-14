@@ -1,6 +1,7 @@
 package bin;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -70,15 +71,20 @@ public abstract class AppOutputInterfacer {
 			}
 			else {
 				int idx = 0;
+				int countSizes = 0;
 				for (String key : box.intern.keySet()) { 
-					// TODO order keyset
 					rowData[16 + idx] = key;
 					rowData[18 + idx] = box.intern.get(key) + "";
 					idx+=4;
+					countSizes++;
 				}
 				rowData[0] = "T";
 				rowData[41] = box.scale + "";
 				rowData[42] = (box.scale * box.getTotalQuantity()) + "";
+				
+				// riordina
+				outputTableData.remove(rowPointer);
+				outputTableData.add(rowPointer, ord(rowData, countSizes));
 			}
 		}
 		System.out.print("\n\n\n**************\n\n\n");
@@ -174,6 +180,81 @@ public abstract class AppOutputInterfacer {
 		rowDataCopy[11] = 0 + "";
 		outputTableData.add(index, rowDataCopy);
 		rows++;
+	}
+	
+	/**
+	 * 
+	 * ---------------------------------------------------
+	 * 
+	 * *******************
+	 * Methods below are used to order S < M < L < XL...
+	 * *******************
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * ---------------------------------------------------
+	 */
+	
+	private static final String[] ORDERED = {"XXS", "XS", "S", "S/M", "M", 
+											 "M/L", "L", "L/XL", "XL", "XL/2XL", 
+											 "XXL", "2XL", "XXXL", "3XL", "4XL", 
+											 "30", "31", "32", "33", "34", "35", 
+											 "36", "37", "38", "39",
+											 "40", "41", "42", "43", "44", "45", 
+											 "46", "47", "48", "49",
+											 "50", "51", "52", "53", "54", "55", 
+											 "56", "57", "58", "59",
+											 "60", "61", "62", "63", "64", "65", 
+											 "66", "67", "68", "69", "70"};
+	
+	private static final int ELEMENTS_IN_ORDERED = ORDERED.length;
+			
+	// riordina riga rowData
+	private static String[] ord(String[] rowData, int countSizes) {
+		
+		String[] newData = Arrays.copyOf(rowData, rowData.length);
+		
+		int c = 0;
+		
+		// per ogni size fs esistente...
+		for (int fs = 0; fs < ELEMENTS_IN_ORDERED; fs++) {
+			
+			String fm = ORDERED[fs];
+			
+			// per ogni colonna utile i in rowData...
+			for (int i = 0; i < countSizes*4; i+=4) { 
+			
+				String size = rowData[16 + i];
+				String q    = rowData[18 + i];
+				
+				// se la size è quella
+				if (size.contains(fm)){
+					
+					newData[16 + c] = size;
+					newData[18 + c] = q;
+					c+=4;
+					
+					System.out.println("oooo");
+					
+					if (c == countSizes*4) {
+						return newData;
+					}
+					
+				}
+				
+			}
+			
+		}
+		
+		// error
+		return rowData;
+		
 	}
 	
 

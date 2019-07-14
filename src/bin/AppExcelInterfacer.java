@@ -1,13 +1,18 @@
 package bin;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
@@ -119,18 +124,63 @@ public abstract class AppExcelInterfacer {
 				sheet.getRow(x).createCell(y);
 		}
 		
+		@SuppressWarnings("unused")
+		private final static int[] COLORED = {13,14,16,17,20,21,24,25,28,29,32,33,36,37,41};
+		private final static int[] BLUES   = {13,14};
+		private final static int[] GRAYS   =       {16,17,20,21,24,25,28,29,32,33,36,37};
+		private final static int[] REDS    = 										   {41};
+		@SuppressWarnings("unused") 
+		private final static Color BLUE    = new Color(197, 217, 241);
+		@SuppressWarnings("unused")
+		private final static Color GRAY    = new Color(242, 242, 242);
+		@SuppressWarnings("unused")
+		private final static Color RED     = new Color(218, 150, 148);
+		
 		/**
 		 * crea bordo superiore in prossimità della riga pointer
 		 * @param pointer riga
 		 */
-		@AnyTimeOk
 		public static void borderUp(int pointer) {
 			HSSFCellStyle t = (HSSFCellStyle) wb.createCellStyle();
-		    t.setBorderTop(BorderStyle.THIN);
-		    sheet.getRow(pointer).setRowStyle(t);
-		    for (int i = 0; i < 30; i++) {
+			Font boldFont = wb.createFont();
+			boldFont.setBold(true);
+		    for (int i = 0; i < 44; i++) {
 		    	AppExcelInterfacer.Advanced.ensure(pointer,i);
-		        sheet.getRow(pointer).getCell(i).setCellStyle(t);
+		    	if (Arrays.binarySearch(BLUES, i) >= 0) // contains
+		    	{
+		    		t = (HSSFCellStyle) wb.createCellStyle();
+				    t.setFont(boldFont);
+				    t.setBorderTop(BorderStyle.THIN);
+				    t.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());
+				    t.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		    		sheet.getRow(pointer).getCell(i).setCellStyle(t);
+		    	}
+		    	else if (Arrays.binarySearch(GRAYS, i) >= 0){
+		    		t = (HSSFCellStyle) wb.createCellStyle();
+		    		t.setFont(boldFont);
+				    t.setBorderTop(BorderStyle.THIN);
+				    t.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+				    t.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+				    if (i == 16) {
+				    	t.setBorderLeft(BorderStyle.THIN);
+				    }
+		    		sheet.getRow(pointer).getCell(i).setCellStyle(t);
+		    	}
+		    	else if (Arrays.binarySearch(REDS, i) >= 0){
+		    		t = (HSSFCellStyle) wb.createCellStyle();
+		    		t.setFont(boldFont);
+				    t.setBorderTop(BorderStyle.THIN);
+				    t.setFillForegroundColor(IndexedColors.CORAL.getIndex());
+				    t.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		    		sheet.getRow(pointer).getCell(i).setCellStyle(t);
+		    	}
+		    	else {
+		    		t = (HSSFCellStyle) wb.createCellStyle();
+				    t.setBorderTop(BorderStyle.THIN);
+				    t.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+				    //t.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		    		sheet.getRow(pointer).getCell(i).setCellStyle(t);
+		    	}
 		    }
 		}
 
