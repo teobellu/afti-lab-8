@@ -7,8 +7,15 @@ import java.util.Map;
 
 public class Entry {
 	
+    /**
+     * Questa classe contiene tutte le info per un prodotto.
+     * Tutte le info sono salvare in qtmap (= rqtmap teoricamente)
+     */
+	
+	// prodotto
 	public String title;
 	
+	// mappa (size, quantità)
 	public Map<String, Integer> qtmap = new HashMap<String, Integer>();
 	
 	// parte piena e finisce vuota
@@ -16,8 +23,6 @@ public class Entry {
 	
 	// max q allowed
 	int div = 20; //TODO
-	
-	int tot;
 	
 	public List<Box> computeBoxes() {
 		//List<Box> boxes = new ArrayList<Box>();

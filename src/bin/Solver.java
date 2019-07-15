@@ -8,6 +8,15 @@ import java.util.List;
 public class Solver {
 	
 	/**
+	 * 
+	 * 
+	 * Il core di questa classe è @AnyTimeOk
+	 * 
+	 * 
+	 * 
+	 */
+	
+	/**
 	 * Will keep the solution of the solver
 	 */
 	public static List<Box> boxes;
