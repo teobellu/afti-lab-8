@@ -58,7 +58,7 @@ public abstract class AppExcelInterfacer {
 				 */
 				String value = arg.get(i)[j];
 				try {
-					int intValue = Integer.parseInt(arg.get(i)[j]);
+					int intValue = Integer.parseInt(value);
 					/**
 					 * Formato per scrivere i numeri
 					 * int style
@@ -68,8 +68,12 @@ public abstract class AppExcelInterfacer {
 					// use style wherever you need it
 					CellStyle integerStyle = wb.createCellStyle();
 					integerStyle.setDataFormat((short) 0);
+					// sulla base di ciò...
+					
 					sheet.getRow(x + i).getCell(y + j).setCellValue(intValue);
-					sheet.getRow(x + i).getCell(x + i).setCellStyle(integerStyle);
+					CellStyle oldStyle = sheet.getRow(x + i).getCell(y + j).getCellStyle();
+					oldStyle.setDataFormat((short) 0);
+					sheet.getRow(x + i).getCell(y + j).setCellStyle(oldStyle);
 				} catch (Exception e) {
 					sheet.getRow(x + i).getCell(y + j).setCellValue(value);
 				}
@@ -165,6 +169,25 @@ public abstract class AppExcelInterfacer {
 			HSSFCellStyle t = (HSSFCellStyle) wb.createCellStyle();
 			Font boldFont = wb.createFont();
 			boldFont.setBold(true);
+			
+			/**
+			 * This is part is available @since 1.1
+			 */
+			for (int i = 0; i < 44; i++) {
+				AppExcelInterfacer.Advanced.ensure(pointer,i);
+				CellStyle oldStyle = sheet.getRow(pointer).getCell(i).getCellStyle();
+				// tante celle puntano a oldStyle
+				CellStyle r = (HSSFCellStyle) wb.createCellStyle();
+				r.cloneStyleFrom(oldStyle);
+				// passaggi non indifferenti:
+				// Cloneable ci ha aiutati, ora solo la nostra cella punta a r
+				r.setBorderTop(BorderStyle.THIN);
+				sheet.getRow(pointer).getCell(i).setCellStyle(r);
+			}
+			if (pointer < 200) // false
+			/**
+			 * This part is deprecated @since 1.1
+			 */
 		    for (int i = 0; i < 44; i++) {
 		    	AppExcelInterfacer.Advanced.ensure(pointer,i);
 		    	if (Arrays.binarySearch(BLUES, i) >= 0) // contains
