@@ -15,6 +15,7 @@ public abstract class BeginMain {
 	public static void main(String[] args) throws Exception{
 		AppExcelInterfacer.open(file);
 		BeginInputForm.show();
+		
 		 //set Workbook
 		AppExcelInterfacer.switchSheet(0); //open first sheet
 	    AppExcelInterfacer.scrollDownGetFirstEmptyRow(2); //set pointer
@@ -30,7 +31,5 @@ public abstract class BeginMain {
 		ExternalExcelEnsurer.check();
 	    
 	    AppExcelInterfacer.save(file);
-		
 	}
-
 }

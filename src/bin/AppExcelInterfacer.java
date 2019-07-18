@@ -10,6 +10,7 @@ import java.util.Arrays;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -51,7 +52,27 @@ public abstract class AppExcelInterfacer {
 		for (int i = 0; i < arg.size(); i++)
 			for (int j = 0; j < arg.get(0).length; j++) {
 				AppExcelInterfacer.Advanced.ensure(x + i, y + j);
-				sheet.getRow(x + i).getCell(y + j).setCellValue(arg.get(i)[j]);
+				
+				/**
+				 * @since 1.1
+				 */
+				String value = arg.get(i)[j];
+				try {
+					int intValue = Integer.parseInt(arg.get(i)[j]);
+					/**
+					 * Formato per scrivere i numeri
+					 * int style
+					 * https://stackoverflow.com/questions/24934975/poi-format-integer-in-excelsheet
+					 * @since 1.1
+					 */
+					// use style wherever you need it
+					CellStyle integerStyle = wb.createCellStyle();
+					integerStyle.setDataFormat((short) 0);
+					sheet.getRow(x + i).getCell(y + j).setCellValue(intValue);
+					sheet.getRow(x + i).getCell(x + i).setCellStyle(integerStyle);
+				} catch (Exception e) {
+					sheet.getRow(x + i).getCell(y + j).setCellValue(value);
+				}
 			}
 	}
 	

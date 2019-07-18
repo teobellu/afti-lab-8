@@ -37,8 +37,25 @@ public abstract class AppOutputInterfacer {
 			for (int j = 0; j < cols; j++)
 				row[j] = "";
 			
+			/**
+			 * @since 1.1
+			 */
+			row[1] = "st";
+			
 			for (int j = 0; j < AppInputRuntimeInterfacer.cols; j++) {
 				row[j + 2] = AppInputRuntimeInterfacer.get(i,j);
+				if (j == 9) {
+					/**
+					 * Removed parseInt error on "13,0" caused by ","
+					 * @since 1.1
+					 */
+					String a = AppInputRuntimeInterfacer.get(i,j);
+					a = a.replace(",00","");
+					a = a.replace(",0","");
+					a = a.replace(".00","");
+					a = a.replace(".0","");
+					row[j + 2] = a;
+				}
 			}
 			
 			outputTableData.add(row);
