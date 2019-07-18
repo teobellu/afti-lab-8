@@ -32,6 +32,11 @@ public class Box {
 	
 	/**
 	 * Restituisce tutte le quantità. Esempio nel box ci sono 4 S e 4 XL, ritorno 8
+	 * 
+	 * --------------------
+	 * WARNING
+	 * --------------------
+	 * Se nel box ci sono 40 XL, ritorna 20 se scale = 2
 	 * @return Nell'esempio, 8
 	 */
 	public int getTotalQuantity() {

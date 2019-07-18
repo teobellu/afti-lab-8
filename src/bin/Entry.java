@@ -22,17 +22,159 @@ public class Entry {
 	public Map<String, Integer> rqtmap = new HashMap<String, Integer>();
 	
 	// max q allowed
-	int div = 20; //TODO
+	int div = 20;
+	
+	int divScat;
 	
 	public List<Box> computeBoxes() {
 		//List<Box> boxes = new ArrayList<Box>();
 		//int resto = tot % div;
 		
+		/**
+		 * compute box as 1.0
+		 * @since 1.0
+		 */
+		List<Box> boxes = computeBoxesNoRest();
 		
-		
-		return computeBoxesNoRest();
+		/**
+		 * pack small units in full boxes
+		 * @since 1.1
+		 */
+		//int numOfBoxes = 0; //@Dynamic
+		//numOfBoxes = boxes.size();
+		//boxes = alaiseBoxes(boxes, numOfBoxes);
+		return boxes;
 	}
 	
+	/**
+	 * Alza le quantità già da 20, a 21 se necessario
+	 * @param boxes
+	 * @param numOfBoxes
+	 * @return
+	 * @since 1.1
+	 */
+	@Deprecated
+	private List<Box> alaiseBoxes(List<Box> boxes, int numOfBoxes) {
+		int qInTheSmallerBox = div + 1;
+		for(Box box : boxes) {
+			/**
+			 * Edit: qInTheSmallerBox non avrà sicuramente scale
+			 * e qWithScale > qWithoutScale
+			 */
+			qInTheSmallerBox = Math.min(
+					qInTheSmallerBox, box.getTotalQuantity());
+		}
+		
+		// FALCOLTATIVO
+		// caso in cui ho tutto pacchi da 20 -------------------
+		if (qInTheSmallerBox >= div)
+			return boxes;
+		// ------------------------
+		
+		int boxWithDiv = 0;
+		for(Box box : boxes) {
+			if (box.getTotalQuantity() != div) {
+				continue;
+			}
+			else {
+				boxWithDiv++;
+			}
+		}
+		
+		int boxWithNoDiv = boxes.size() - boxWithDiv;
+		
+		/**
+		 * N CASI come: 	10 11  		into 20
+		 * 					20 29 2 	into 21 21
+		 */
+		
+		// new space available per box
+		int magicalSpace = (int) (div * 0.1);
+		
+		// no opt is possible
+		if (magicalSpace == 0)
+			return boxes;
+		
+		// case 20 20 20 20 5
+		if (boxWithNoDiv == 1) {
+			Box badBox = null;
+			for(Box box : boxes) {
+				if (box.getTotalQuantity() == qInTheSmallerBox) {
+					badBox = box;
+				}
+			}
+			// from 5 to 1 1 1 1 1
+			List<Box> badBoxes = iterativeSplitting(badBox);
+			boxes.remove(badBox);
+			boxes.addAll(badBoxes);
+			
+			int temp = 1;
+			while (temp <= magicalSpace) {
+				//perfectMatch(boxes, div + temp);
+				temp++;
+			}
+		}
+		
+		// case 20 20 20 20 11 10
+		// note that w1 + w2 < 20
+		else if
+		(boxWithNoDiv == 2) {
+			
+		}
+		
+		// case 20 20 20 20 14 14 14
+		// note that w1 + w2 + w3 < 20
+		else if
+		(boxWithNoDiv == 2) {
+			
+		}
+		
+		/**
+		 * Whoops, we are in trouble here
+		 */
+		// nothing
+		return boxes;
+	}
+	
+	/**
+	 * 
+	 * FROM (XL 2 XS 1)
+	 * TO (XL 1),(XL 1),(XS 1) 
+	 * 
+	 * @param box
+	 * @return
+	 */
+	@Deprecated
+	List<Box> iterativeSplitting(Box box){
+		List<Box> boxes = new ArrayList<Box>();
+		
+		// non splittable
+		assert(box.scale == 1);
+		if (box.scale != 1) {
+			boxes.add(box);
+			return boxes;
+		}
+		
+		int tot = box.getTotalQuantity();
+		while(tot > 0) {
+			String gsize = null;
+			lang: for (String size : box.intern.keySet()) {
+				Box b = new Box(box.product);
+				b.intern.put(size, 1);
+				gsize = size;
+				boxes.add(b);
+				break lang;
+			}
+			box.intern.put(gsize, box.intern.get(gsize) - 1);
+			if (box.intern.get(gsize) == 0) {
+				box.intern.remove(gsize);
+			}
+			tot--;
+		}
+		
+		return boxes;
+	}
+
 	private List<Box> computeBoxesNoRest() {
 		List<Box> boxes = new ArrayList<Box>();
 		
@@ -80,6 +222,9 @@ public class Entry {
 		clearkey.forEach(k -> rqtmap.remove(k));
 		clearkey.clear();
 		
+		// qui ho tutte quantità sotto il 20
+		// lo scale sarà per forza 1
+		
 		for(int divi = div; divi >= 0; divi--) {
 			if (rqtmap.isEmpty()) 
 				return boxes;
@@ -119,8 +264,14 @@ public class Entry {
 		return boxes;
 	}
 	
+	
 	/**
+	 * 
+	 * WARNING ******************************** scale is 1 !!!!
+	 *         ********************************
 	 * with side effect on boxes
+	 * @param boxes
+	 * @param localdiv
 	 */
 	public void perfectMatch(List<Box> boxes, int localdiv) { //e.g. local_div = 20
 		List<String> clearkey = new ArrayList<String>();

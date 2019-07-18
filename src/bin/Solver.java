@@ -1,6 +1,7 @@
 package bin;
 
 import java.util.ArrayList;
+//import java.util.Arrays;
 //import java.util.HashMap;
 import java.util.List;
 //import java.util.Map;
@@ -45,8 +46,23 @@ public class Solver {
 			
 			if (AppInputRuntimeInterfacer.get(i,9).toString().equals(""))
 				entry_i.qt=0;
-			else
-			    entry_i.qt = Integer.parseInt(AppInputRuntimeInterfacer.get(i, 9));
+			else {
+				try {
+					entry_i.qt = Integer.parseInt(AppInputRuntimeInterfacer.get(i, 9));
+				}
+				catch(Exception e) {
+					/**
+					 * Removed parseInt error on "13,0" caused by ","
+					 * @since 1.1
+					 */
+					String a = AppInputRuntimeInterfacer.get(i, 9);
+					a = a.replace(",00","");
+					a = a.replace(",0","");
+					a = a.replace(".00","");
+					a = a.replace(".0","");
+					entry_i.qt = Integer.parseInt(a);
+				}
+			}
 			// la riga è stata appena letta
 			
 			// WARNING COMPUTAZIONE QUI:
