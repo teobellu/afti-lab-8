@@ -175,6 +175,7 @@ public abstract class JustConsolePrinter {
 	
 	
 	@Deprecated
+	public
 	static void printMatrix(String[][] m){
 	    try{
 	        int rows = m.length;

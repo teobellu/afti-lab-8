@@ -2,6 +2,9 @@ package bin;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+
+import ext.JustConsolePrinter;
 
 public abstract class AppInputRuntimeInterfacer {
 	
@@ -31,21 +34,51 @@ public abstract class AppInputRuntimeInterfacer {
 	
 	/**
 	 * legge i dati nell'input form (inseriti dall'utente a runtime)
+	 * @param list 
 	 */
-	public static void readMatrixInInputForm() {
+	@SuppressWarnings("deprecation")
+	public static void readMatrixInInputForm(List<String> list) {
 		rows = BeginInputForm.usedRows();
 		cols = BeginInputForm.usedColumns();
 		jTableData = new String[rows][cols];
 		
 		// fill table 
-		for (int i = 0; i < rows; i++)
+		int retro_i = 0;
+		for (int i = 0; i < rows; i++) {
+			/**
+			 * @since 1.1
+			 */
+			if (!list.contains(BeginInputForm.jtable.getModel().getValueAt(i, 1))) {
+				retro_i++;
+				continue;
+			}
+			/**
+			 * @since 1.0 but modified i in i - retro_i since @since 1.1
+			 */
 			for (int j = 0; j < cols; j++) {
 				Object o = BeginInputForm.jtable.getModel().getValueAt(i, j);
 				if (o == null)
-					jTableData[i][j] = "";
+					jTableData[i - retro_i][j] = "";
 				else
-					jTableData[i][j] = o.toString();
+					jTableData[i - retro_i][j] = o.toString();
 			}
+		}
+		
+		/**
+		 * @since 1.1 avoid possible nullPointerException
+		 */
+		String[][] ls = new String[rows - retro_i][cols];
+		for (int i = 0; i < rows - retro_i; i++) {
+			for (int j = 0; j < cols; j++) {
+				ls[i][j] = jTableData[i][j];
+			}
+		}
+		jTableData = ls;
+		JustConsolePrinter.printMatrix(jTableData);
+		rows = rows - retro_i;
+		BeginInputForm.rAfter = rows;
+		
+		//---------------
 		
 		// fill titles
 		titles = new HashSet<>();

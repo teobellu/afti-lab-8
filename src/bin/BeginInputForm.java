@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import javax.swing.DropMode;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -62,7 +63,7 @@ public abstract class BeginInputForm {
 	    int result = JOptionPane.showConfirmDialog(null, panel, "afti-lab-8",
 	        JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
 	    if (result == JOptionPane.OK_OPTION) {
-	    	AppInputRuntimeInterfacer.readMatrixInInputForm();
+	    	AppInputRuntimeInterfacer.readMatrixInInputForm(askOrder());
 	    	AppInputCompileTimeInterfacer.extractDataFromExcelAboutAllowedSized();
 	    	showInferer();
 	    } else {
@@ -81,7 +82,15 @@ public abstract class BeginInputForm {
 		
 		HashSet<String> titles = new HashSet<String>();
 		for(int r = 0; r < usedRows(); r++) {
-			titles.add(AppInputRuntimeInterfacer.get(r, 5));
+			/**
+			 * @since 1.1
+			 */
+			try {
+			String t = AppInputRuntimeInterfacer.get(r, 5);
+			titles.add(t);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
 		
 		JPanel panel = new JPanel(new GridBagLayout());
@@ -91,6 +100,8 @@ public abstract class BeginInputForm {
 		List<JTextField> fields = new ArrayList<JTextField>();
 		
 		for(String title : titles) {
+			if (title == null) /**@since 1.1*/
+				continue;
 			if (title.equals(""))
 				continue;
 			if (AppInputCompileTimeInterfacer.products.contains(title))
@@ -106,9 +117,9 @@ public abstract class BeginInputForm {
 	    int result = JOptionPane.showConfirmDialog(null, panel, "afti-lab-8",
 	        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 	    
-	    
 	    if (result == JOptionPane.OK_OPTION) {
 	    	for (int i = 0; i < prodfield.size(); i++) {
+	    		
 	    		AppInputCompileTimeInterfacer.addNewInformation(prodfield.get(i), Integer.parseInt(fields.get(i).getText()));
 	    	}
 	    } else {
@@ -118,10 +129,66 @@ public abstract class BeginInputForm {
 	}
 	
 	/**
+	 * Quali ordini?
+	 * @return Quali ordini
+	 * @since 1.1
+	 */
+	public static List<String> askOrder() {
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		gbc.anchor = GridBagConstraints.WEST;
+		
+		HashSet<String> orders = new HashSet<String>();
+		
+		for(int r = 0; r < usedRows(); r++) {
+			orders.add((String) jtable.getModel().getValueAt(r, 1));
+		}
+		
+		List<String> listOrders = new ArrayList<String>(orders);
+		
+		if (listOrders.size() == 1)
+			return listOrders;
+		
+		JPanel panel = new JPanel(new GridBagLayout());
+		
+		List<JCheckBox> cbs = new ArrayList<JCheckBox>();
+		
+		for(String order : listOrders) {
+			//panel.add(new JLabel(order),gbc);
+			JCheckBox cb = new JCheckBox(order, true);
+			cbs.add(cb);
+			panel.add(cb,gbc);
+			panel.add(new JLabel("----------------------------------------------------------------"),gbc);
+		}
+		
+	    int result = JOptionPane.showConfirmDialog(null, panel, "afti-lab-8",
+	        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+	    
+	    List<String> realOrders = new ArrayList<String>();
+	    
+	    if (result == JOptionPane.OK_OPTION) {
+	    	for (int i = 0; i < cbs.size(); i++) {
+	    		if (cbs.get(i).isSelected())
+	    			realOrders.add(listOrders.get(i));
+	    	}
+	    	return realOrders;
+	    } else {
+	    	System.exit(0);
+	    }
+	    // we can't be here
+	    throw new InternalError();
+	}
+	
+	public static Integer rAfter = null;
+	
+	/**
 	 * dice quante righe sono state scritte in input
 	 * @return vedi descrizione
 	 */
 	public static int usedRows() {
+		if (rAfter != null)
+			return rAfter;
 	    for (int row = 0; row < JROWS; row++) {
 	        if (jtable.getValueAt(row, 0) == null)
 	        	if (row > 0 && jtable.getValueAt(row - 1, 0).toString().equals(""))
