@@ -53,6 +53,7 @@ public class Entry {
 	 * @return
 	 * @since 1.1
 	 */
+	@SuppressWarnings("unused")
 	@Deprecated
 	private List<Box> alaiseBoxes(List<Box> boxes, int numOfBoxes) {
 		int qInTheSmallerBox = div + 1;
