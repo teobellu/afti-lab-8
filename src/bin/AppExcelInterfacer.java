@@ -174,7 +174,23 @@ public abstract class AppExcelInterfacer {
 		 * @param pointer riga
 		 */
 		public static void borderUp(int pointer) {
-			HSSFCellStyle t = (HSSFCellStyle) wb.createCellStyle();
+			try {
+				borderUpUnsafe(pointer);
+			}catch(Exception e) {
+				System.out.println("Style error");
+				System.err.println(e);
+			}
+			
+			//https://stackoverflow.com/questions/44176582/java-lang-illegalstateexception-you-can-define-up-to-4000-styles-in-a-xls-work
+			//sheet.getRow(pointer).setCellStyle(r);
+		}
+		
+		/**
+		 * crea bordo superiore in prossimità della riga pointer
+		 * @param pointer riga
+		 */
+		public static void borderUpUnsafe(int pointer) {
+			CellStyle t = (HSSFCellStyle) wb.createCellStyle();
 			Font boldFont = wb.createFont();
 			boldFont.setBold(true);
 			
@@ -184,8 +200,8 @@ public abstract class AppExcelInterfacer {
 			for (int i = 0; i < 44 + 3 /**the +3 is @since 1.2*/; i++) {
 				AppExcelInterfacer.Advanced.ensure(pointer,i);
 				CellStyle oldStyle = sheet.getRow(pointer).getCell(i).getCellStyle();
+				CellStyle r = wb.createCellStyle(); //B2
 				// tante celle puntano a oldStyle
-				CellStyle r = (HSSFCellStyle) wb.createCellStyle();
 				r.cloneStyleFrom(oldStyle);
 				// passaggi non indifferenti:
 				// Cloneable ci ha aiutati, ora solo la nostra cella punta a r
