@@ -6,14 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 //import java.util.Map;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 public class Solver {
 	
 	/**
+	 * 											**** PAY ATTENTION!!! ****
 	 * 
-	 * 
-	 * Il core di questa classe è @AnyTimeOk
-	 * 
-	 * 
+	 * 										Il core di questa classe è @AnyTimeOk
 	 * 
 	 */
 	
@@ -60,7 +61,20 @@ public class Solver {
 					a = a.replace(",0","");
 					a = a.replace(".00","");
 					a = a.replace(".0","");
-					entry_i.qt = Integer.parseInt(a);
+					
+					/**
+					 * @since 1.2 moved in try/catch
+					 */
+					try {
+						entry_i.qt = Integer.parseInt(a);
+					}
+					catch(Exception e2) {
+						JOptionPane.showMessageDialog(new JFrame(), 
+								"Error: cannot convert this quantity to integer: " + a +
+								"\nError: Program will exit.",
+								"Error", JOptionPane.ERROR_MESSAGE);
+						System.exit(0);
+					}
 				}
 			}
 			// la riga è stata appena letta

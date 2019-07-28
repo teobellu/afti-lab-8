@@ -7,6 +7,9 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -128,6 +131,11 @@ public abstract class AppExcelInterfacer {
 			wb.write(fileOut);  
 	        fileOut.close(); 
 		} catch (Exception e) {
+			/**@since 1.2*/
+			JOptionPane.showMessageDialog(new JFrame(), 
+					"Error: You forgot to close Excel.\nError: A fatal exception has occurred. Program will exit.",
+					"Java Virtual Machine Launcher", JOptionPane.ERROR_MESSAGE);
+				System.exit(0);
 			e.printStackTrace();
 		}  
 	}
@@ -173,7 +181,7 @@ public abstract class AppExcelInterfacer {
 			/**
 			 * This is part is available @since 1.1
 			 */
-			for (int i = 0; i < 44; i++) {
+			for (int i = 0; i < 44 + 3 /**the +3 is @since 1.2*/; i++) {
 				AppExcelInterfacer.Advanced.ensure(pointer,i);
 				CellStyle oldStyle = sheet.getRow(pointer).getCell(i).getCellStyle();
 				// tante celle puntano a oldStyle

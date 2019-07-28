@@ -26,7 +26,7 @@ public abstract class AppOutputInterfacer {
 	 */
 	public static void prepareOutputSpace() {
 		rows = AppInputRuntimeInterfacer.rows;
-		cols = 43;
+		cols = 46;
 		outputTableData = new ArrayList<String[]>();
 		
 		for (int i = 0; i < rows; i++) {
@@ -72,7 +72,9 @@ public abstract class AppOutputInterfacer {
 	public static void jinvoke() {
 		for (Box box : Solver.boxes) {
 			
-			int rowPointer = internalPointerByText(box.product);
+			String product = box.product;
+			
+			int rowPointer = internalPointerByText(product);
 						
 			String[] rowData = outputTableData.get(rowPointer);
 			
@@ -83,6 +85,11 @@ public abstract class AppOutputInterfacer {
 					rowData[15] = box.intern.get(key) + "";
 					rowData[41] = box.scale + "";
 					rowData[42] = (box.scale * box.intern.get(key)) + "";
+					
+					/**
+					 * @since 1.2
+					 */
+					rowData[45] = AppInputCompileTimeInterfacer.boxAdditionInfoes.getOrDefault(product, "");
 				}
 				
 			}
@@ -99,6 +106,10 @@ public abstract class AppOutputInterfacer {
 				rowData[41] = box.scale + "";
 				rowData[42] = (box.scale * box.getTotalQuantity()) + "";
 				
+				/**
+				 * @since 1.2
+				 */
+				rowData[45] = AppInputCompileTimeInterfacer.boxAdditionInfoes.getOrDefault(product, "");
 				// riordina
 				outputTableData.remove(rowPointer);
 				outputTableData.add(rowPointer, ord(rowData, countSizes));
@@ -242,7 +253,7 @@ public abstract class AppOutputInterfacer {
 		// per ogni size fs esistente...
 		for (int fs = 0; fs < ELEMENTS_IN_ORDERED; fs++) {
 			
-			String fm = ORDERED[fs];
+			String fm = ORDERED[fs]; //o meglio, fm è la size, fs è ORDERED.indexof(fm)
 			
 			// per ogni colonna utile i in rowData...
 			for (int i = 0; i < countSizes*4; i+=4) { 
@@ -251,7 +262,8 @@ public abstract class AppOutputInterfacer {
 				String q    = rowData[18 + i];
 				
 				// se la size è quella
-				if (size.contains(fm)){
+				/**@since 1.2 deprecated contains, substitute with equals*/
+				if (size.equals(fm)){
 					
 					newData[16 + c] = size;
 					newData[18 + c] = q;

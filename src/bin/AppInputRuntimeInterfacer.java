@@ -42,6 +42,9 @@ public abstract class AppInputRuntimeInterfacer {
 		cols = BeginInputForm.usedColumns();
 		jTableData = new String[rows][cols];
 		
+		System.out.println(rows);
+		System.out.println(cols);
+		
 		// fill table 
 		int retro_i = 0;
 		for (int i = 0; i < rows; i++) {

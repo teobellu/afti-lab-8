@@ -3,7 +3,7 @@ package bin;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Box {
+public class Box /**cloneable @since 1.2*/ implements Cloneable {
 	
 	/**
 	 * Nome prodotto (esempio: Camicia verde a maniche fucsia)
@@ -45,5 +45,19 @@ public class Box {
 			tot += i;
 		}
 		return tot;
+	}
+	
+	/**
+	 * Box is
+	 * CLONEABLE SINCE @since 1.2
+	 */
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		Box B = new Box(this.product);
+		B.scale = this.scale;
+		for (String size : this.intern.keySet()) {
+			B.intern.put(size, this.intern.get(size));
+		}
+		return super.clone();
 	}
 }
