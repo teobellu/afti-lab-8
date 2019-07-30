@@ -1,6 +1,9 @@
 package bin.pub;
 
+//import java.awt.BorderLayout;
 import java.awt.Color;
+//import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 
 import java.awt.GridBagLayout;
@@ -15,8 +18,10 @@ import java.util.List;
 
 import javax.swing.DropMode;
 import javax.swing.JCheckBox;
+//import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+//import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -25,6 +30,7 @@ import javax.swing.JTextField;
 //import javax.swing.event.TableModelListener;
 //import javax.swing.table.TableModel;
 
+import ext.SecurityEnsurer;
 import ext.pub.ExcelAdapter;
 
 /**
@@ -75,6 +81,13 @@ public abstract class BeginInputForm {
 	    panel.add(scrollPane,gbc);
 	    
 	    /**
+	     * states @since 1.5
+	     */
+	    panel = new JPanel(new GridBagLayout());
+	    panel.add(new JLabel("This is version " + SecurityEnsurer.PROGRAM_VERSION + ". It is no longer necessary to paste the data."),gbc);
+	    panel.add(new JLabel("Just copy the AS400 data and (later) open this program."),gbc);
+    
+	    /**
 	     * @since 1.5
 	     */
 	    JCheckBox only_u_cbx = new JCheckBox("Do you want to use only the U layer?");
@@ -84,7 +97,7 @@ public abstract class BeginInputForm {
 	    //javax.swing.JCheckBox clearExecution = new javax.swing.JCheckBox("Non applicabile", true);
 	    //panel.add(randomDomains,gbc);
 	    //panel.add(clearExecution,gbc);
-	    Color color = Color.getHSBColor((float)Math.random(), (float)Math.random(), (float)Math.random()*66);
+	    Color color = hslColor((float)Math.random(), (float)Math.random(), 0.75f);
 	    panel.setBackground(color);
 	    
 	    /*
@@ -137,6 +150,24 @@ public abstract class BeginInputForm {
 	    	/**@since 1.5*/
 	    	AppInputRuntimeInterfacer.only_u = only_u_cbx.isSelected();
 	    	
+	    	/**@since 1.5 ask all sizes in one time*/
+	    	/***************************************************************************/
+	    	jCache = new JTable();
+			jCache.setModel(jtable.getModel()); // save in cache
+	    	HashSet<String> orders = new HashSet<String>();
+			for(int r = 0; r < usedRows(); r++) {
+				orders.add((String) jtable.getModel().getValueAt(r, 1));
+			}
+			List<String> ordlistFull = new ArrayList<>(orders);
+	    	AppInputRuntimeInterfacer.readMatrixInInputForm(ordlistFull);
+	    	AppInputCompileTimeInterfacer.extractDataFromExcelAboutAllowedSized();
+    		showInferer();
+	    	rAfter = null;
+			JROWS = 500;
+			jtable.setModel(jCache.getModel()); // restore from cache
+			/***************************************************************************/
+	    	
+			
 	    	List<String> ordersIDS = askOrder();
 	    	if (FLOW_MODALITY_ON == false) {
 	    		AppInputRuntimeInterfacer.readMatrixInInputForm(ordersIDS);
@@ -166,6 +197,61 @@ public abstract class BeginInputForm {
 	    } else {
 	    	System.exit(0);
 	    }
+	}
+	
+	/**
+	 * color
+	 * @ since 1.5
+	 * @param h
+	 * @param s
+	 * @param l
+	 * @return
+	 */
+	static public Color hslColor(float h, float s, float l) {
+	    float q, p, r, g, b;
+
+	    if (s == 0) {
+	        r = g = b = l; // achromatic
+	    } else {
+	        q = l < 0.5 ? (l * (1 + s)) : (l + s - l * s);
+	        p = 2 * l - q;
+	        r = hue2rgb(p, q, h + 1.0f / 3);
+	        g = hue2rgb(p, q, h);
+	        b = hue2rgb(p, q, h - 1.0f / 3);
+	    }
+	    return new Color(Math.round(r * 255), Math.round(g * 255), Math.round(b * 255));
+	}
+	
+	/**
+	 * color
+	 * @since 1.5
+	 * @param p
+	 * @param q
+	 * @param h
+	 * @return
+	 */
+	private static float hue2rgb(float p, float q, float h) {
+	    if (h < 0) {
+	        h += 1;
+	    }
+
+	    if (h > 1) {
+	        h -= 1;
+	    }
+
+	    if (6 * h < 1) {
+	        return p + ((q - p) * 6 * h);
+	    }
+
+	    if (2 * h < 1) {
+	        return q;
+	    }
+
+	    if (3 * h < 2) {
+	        return p + ((q - p) * 6 * ((2.0f / 3.0f) - h));
+	    }
+
+	    return p;
 	}
 	
 	/**
@@ -231,12 +317,25 @@ public abstract class BeginInputForm {
 			/** @since 1.2 */
 			new_titles++;
 			
-			panel.add(new JLabel(title),gbc);
-			JTextField jt = new JTextField("?"); /**@since 1.5*/
+			/** @since 1.5 */
+			//panel = new JPanel(new GridBagLayout());
+			String article = articles.getOrDefault(title, "???");
+			@SuppressWarnings("unused")
+			int articleSize = article.length();
+			//int shift = 30 - articleSize;
+			//    StringBuilder r = new StringBuilder();
+			//    for (int i = 0; i < shift; i++) {
+			//        r.append(" ");
+			//    }
+			String printArticle = "{" + article + "} -----> " ;//+ r.toString();
+			
+			panel.add(new JLabel(printArticle + title)); /**@since 1.5*/
+			JTextField jt = new JTextField(""); /**@since 1.5*/
+			jt.setPreferredSize( new Dimension( 200, 16 ) );
 			prodfield.add(title);
 			fields.add(jt);
 			panel.add(jt,gbc);
-			panel.add(new JLabel("----------------------------------------------------------------"),gbc);
+			/**@since i.5*/ //panel.add(new JLabel("----------------------------------------------------------------"),gbc);
 		}
 		
 		/** @since 1.2 */
@@ -254,6 +353,8 @@ public abstract class BeginInputForm {
 	    		int allowedSize = 0;
 	    		try {
 	    			allowedSize = Integer.parseInt(fields.get(i).getText());
+	    			if (allowedSize == 0)
+	    				throw new Exception();
 	    		}
 	    		catch(Exception e) {
 	    			JOptionPane.showMessageDialog(new JFrame(), 
@@ -312,7 +413,7 @@ public abstract class BeginInputForm {
 			JCheckBox cb = new JCheckBox(order, true);
 			cbs.add(cb);
 			panel.add(cb,gbc);
-			panel.add(new JLabel("----------------------------------------------------------------"),gbc);
+			/**@since i.5*/ //panel.add(new JLabel("----------------------------------------------------------------"),gbc); 
 		}
 		
 		/**

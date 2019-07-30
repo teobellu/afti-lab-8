@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+//import javax.swing.*;
+
 import bin.pub.AppExcelInterfacer;
 import bin.pub.AppOutputInterfacer;
 import bin.pub.BeginInputForm;
@@ -23,7 +25,7 @@ public abstract class BeginMain {
 	
 	public static File file = new File("./file Dati x sovracolli.xls");
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		try {
 		SecurityEnsurer.checkSecurity();
 		AppExcelInterfacer.open(file);
