@@ -59,13 +59,15 @@ public abstract class AppInputCompileTimeInterfacer {
 	 * @param product nome prodotto
 	 * @param allowedSize quantità permessa
 	 */
-	public static void addNewInformation(String product, /**@since 1.2*/ String article, int allowedSize) {
+	public static void addNewInformation(String product, /**@since 1.2*/ String article, int allowedSize, String dataCol2) {
 		products.add(product);
 		allowedSizes.put(product, allowedSize);
 		
 		AppExcelInterfacer.write(AppExcelInterfacer.pointer, 0, product);
 		/**@since 1.2*/ AppExcelInterfacer.write(AppExcelInterfacer.pointer, 1, article);
 		AppExcelInterfacer.write(AppExcelInterfacer.pointer, 3, allowedSize + "");
+		/**@since 2.1*/
+		AppExcelInterfacer.write(AppExcelInterfacer.pointer, 4, dataCol2);
 		
 		AppExcelInterfacer.pointer++;
 	}

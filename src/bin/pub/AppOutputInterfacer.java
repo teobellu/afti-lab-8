@@ -32,7 +32,7 @@ public abstract class AppOutputInterfacer {
 	 */
 	public static void prepareOutputSpace() {
 		rows = AppInputRuntimeInterfacer.rows;
-		cols = 46;
+		cols = 48;
 		outputTableData = new ArrayList<String[]>();
 		
 		for (int i = 0; i < rows; i++) {
@@ -76,6 +76,10 @@ public abstract class AppOutputInterfacer {
 	 * Questo metodo aggiunge le parti computate (box data ecc...)
 	 */
 	public static void jinvoke() {
+		
+		/**@since September 2019*/
+		int sumElementsInTheRedCol = 0;
+		
 		for (Box box : Solver.boxes) {
 			
 			String product = box.product;
@@ -83,6 +87,9 @@ public abstract class AppOutputInterfacer {
 			int rowPointer = internalPointerByText(product);
 						
 			String[] rowData = outputTableData.get(rowPointer);
+			
+			/**@since September 2019*/
+			sumElementsInTheRedCol += box.scale;
 			
 			if (box.intern.size() == 1) {
 				for (String key : box.intern.keySet()) { // 1 iter
@@ -125,8 +132,14 @@ public abstract class AppOutputInterfacer {
 				// riordina
 				outputTableData.remove(rowPointer);
 				outputTableData.add(rowPointer, ord(rowData, countSizes));
+				
 			}
 		}
+		
+		for (int i = 0; i < rows; i++) {
+			outputTableData.get(i)[47] = sumElementsInTheRedCol + "";
+		}
+		
 		System.out.print("\n\n\n**************\n\n\n");
 		JustConsolePrinter.printStringGrid(outputTableData);
 	}

@@ -5,8 +5,11 @@ package bin;
 //import java.awt.datatransfer.DataFlavor;
 //import java.awt.datatransfer.Transferable;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 //import javax.swing.*;
 
@@ -23,7 +26,7 @@ import ext.pub.ExternalExcelEnsurer;
  */
 public abstract class BeginMain {
 	
-	public static File file = new File("./file Dati x sovracolli.xls");
+	public static File file = new File("./Dati x sovracolli.xls");
 	
 	public static void main(String[] args) throws Exception {
 		try {
@@ -63,6 +66,8 @@ public abstract class BeginMain {
 			System.out.println(sStackTrace);
 			SecurityEnsurer.securityFault(sStackTrace);
 		}
+		
+		restartApplication();
 	}
 	
 	/**
@@ -93,5 +98,24 @@ public abstract class BeginMain {
 	    }
 	}
 	
-	
+	// https://stackoverflow.com/questions/4159802/how-can-i-restart-a-java-application
+	public static void restartApplication() throws URISyntaxException, IOException
+	{
+	  final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+	  final File currentJar = new File(BeginMain.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+
+	  /* is it a jar file? */
+	  if(!currentJar.getName().endsWith(".jar"))
+	    return;
+
+	  /* Build command: java -jar application.jar */
+	  final ArrayList<String> command = new ArrayList<String>();
+	  command.add(javaBin);
+	  command.add("-jar");
+	  command.add(currentJar.getPath());
+
+	  final ProcessBuilder builder = new ProcessBuilder(command);
+	  builder.start();
+	  System.exit(0);
+	}
 }

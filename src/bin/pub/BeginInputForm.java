@@ -70,6 +70,7 @@ public abstract class BeginInputForm {
 		jtable.setDropMode(DropMode.INSERT_ROWS);
 	    new ExcelAdapter(jtable);
 	    
+	    @SuppressWarnings("unused")
 	    JScrollPane scrollPane = new JScrollPane(jtable);
 	    jtable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 	    
@@ -77,16 +78,16 @@ public abstract class BeginInputForm {
 	    panel.add(new JLabel("afti-lab-8 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"),gbc);
 	    //panel.add(new JLabel("Parametri speciali:"),gbc);
 	    //panel.add(field0,gbc);
-	    panel.add(new JLabel("Try copying the data before opening this program."),gbc);
+	    //panel.add(new JLabel("Try copying the data before opening this program."),gbc);
 	    panel.add(scrollPane,gbc);
 	    
 	    /**
 	     * states @since 1.5
 	     */
-	    panel = new JPanel(new GridBagLayout());
+	    //panel = new JPanel(new GridBagLayout()); removed @since 2.1
 	    panel.add(new JLabel("This is version " + SecurityEnsurer.PROGRAM_VERSION + ". It is no longer necessary to paste the data."),gbc);
 	    panel.add(new JLabel("Just copy the AS400 data and (later) open this program."),gbc);
-    
+	    
 	    /**
 	     * @since 1.5
 	     */
@@ -302,6 +303,7 @@ public abstract class BeginInputForm {
 		
 		List<String> prodfield = new ArrayList<String>();
 		List<JTextField> fields = new ArrayList<JTextField>();
+		List<JTextField> secondColFields = new ArrayList<JTextField>();
 		
 		/** @since 1.2 */
 		int new_titles = 0;
@@ -322,19 +324,34 @@ public abstract class BeginInputForm {
 			String article = articles.getOrDefault(title, "???");
 			@SuppressWarnings("unused")
 			int articleSize = article.length();
-			//int shift = 30 - articleSize;
-			//    StringBuilder r = new StringBuilder();
-			//    for (int i = 0; i < shift; i++) {
-			//        r.append(" ");
-			//    }
-			String printArticle = "{" + article + "} -----> " ;//+ r.toString();
+			int shift = 30 - articleSize;
+			shift = Math.max(shift, 0);
+			    StringBuilder r = new StringBuilder();
+			   for (int i = 0; i < shift; i++) {
+			        //r.append(" ");
+			    }
+			String printArticle = "{" + article + "} -----> " + r.toString();
+			// align title
+			shift = 120 - title.length();
+			shift = Math.max(shift, 0);
+			    r = new StringBuilder();
+			   for (int i = 0; i < shift; i++) {
+			        //r.append(" ");
+			    }
+			String printTitle = title + r.toString();
 			
-			panel.add(new JLabel(printArticle + title)); /**@since 1.5*/
+			panel.add(new JLabel(printArticle)); /**@since 1.5*/
+			panel.add(new JLabel(printTitle));
 			JTextField jt = new JTextField(""); /**@since 1.5*/
-			jt.setPreferredSize( new Dimension( 200, 16 ) );
+			jt.setPreferredSize( new Dimension( 50, 16 ) );
 			prodfield.add(title);
 			fields.add(jt);
-			panel.add(jt,gbc);
+			panel.add(jt);
+			
+			JTextField jt2 = new JTextField(""); /**@since 2.1*/
+			jt2.setPreferredSize( new Dimension( 50, 16 ) );
+			secondColFields.add(jt2);
+			panel.add(jt2,gbc);
 			/**@since i.5*/ //panel.add(new JLabel("----------------------------------------------------------------"),gbc);
 		}
 		
@@ -348,11 +365,14 @@ public abstract class BeginInputForm {
 	    if (result == JOptionPane.OK_OPTION) {
 	    	for (int i = 0; i < prodfield.size(); i++) {
 	    		String prod = prodfield.get(i);
+	    		/**@since 2.1*/
+	    		String valCol1 = fields.get(i).getText();
+	    		String valCol2 = secondColFields.get(i).getText();
 	    		
 	    		/**try catch @since 1.5*/
 	    		int allowedSize = 0;
 	    		try {
-	    			allowedSize = Integer.parseInt(fields.get(i).getText());
+	    			allowedSize = Integer.parseInt(valCol1);
 	    			if (allowedSize == 0)
 	    				throw new Exception();
 	    		}
@@ -363,7 +383,7 @@ public abstract class BeginInputForm {
 	    			System.exit(0);
 	    		}
 	    		
-	    		AppInputCompileTimeInterfacer.addNewInformation(prod, articles.get(prod), allowedSize);
+	    		AppInputCompileTimeInterfacer.addNewInformation(prod, articles.get(prod), allowedSize, valCol2);
 	    	}
 	    } else {
 	    	System.exit(0);
