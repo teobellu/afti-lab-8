@@ -120,7 +120,9 @@ public abstract class AppExcelInterfacer {
 			FileInputStream fstream = new FileInputStream(file);
 			wb = new HSSFWorkbook(fstream);
 		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Cannot load file! Dev. recall: do not open jar from eclipse.");
 			e.printStackTrace();
+			System.exit(0);
 		}
 	}
 	

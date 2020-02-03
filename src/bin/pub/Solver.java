@@ -59,8 +59,7 @@ public class Solver {
 					String a = AppInputRuntimeInterfacer.get(i, 9);
 					a = a.replace(",00","");
 					a = a.replace(",0","");
-					a = a.replace(".00","");
-					a = a.replace(".0","");
+					a = a.replace(".","");
 					
 					/**
 					 * @since 1.2 moved in try/catch

@@ -37,6 +37,8 @@ public abstract class BeginMain {
 		 //set Workbook
 		AppExcelInterfacer.switchSheet(0); //open first sheet
 	    AppExcelInterfacer.scrollDownGetFirstEmptyRow(2); //set pointer
+	    BeginInputForm.renameSTtoS();
+	    
 	    //Utilizer.jwrite();
 	    //Utilizer.jinvoke();
 	    Solver.run();
@@ -99,6 +101,7 @@ public abstract class BeginMain {
 	}
 	
 	// https://stackoverflow.com/questions/4159802/how-can-i-restart-a-java-application
+	/** @since 2.2 and 2.3 */
 	public static void restartApplication() throws URISyntaxException, IOException
 	{
 	  final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";

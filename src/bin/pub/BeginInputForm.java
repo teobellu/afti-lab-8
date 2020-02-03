@@ -2,6 +2,7 @@ package bin.pub;
 
 //import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Desktop;
 //import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -11,12 +12,17 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
 import javax.swing.DropMode;
+import javax.swing.Icon;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 //import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -29,7 +35,9 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 //import javax.swing.event.TableModelListener;
 //import javax.swing.table.TableModel;
+import javax.swing.UIManager;
 
+import bin.BeginMain;
 import ext.SecurityEnsurer;
 import ext.pub.ExcelAdapter;
 
@@ -85,8 +93,9 @@ public abstract class BeginInputForm {
 	     * states @since 1.5
 	     */
 	    //panel = new JPanel(new GridBagLayout()); removed @since 2.1
-	    panel.add(new JLabel("This is version " + SecurityEnsurer.PROGRAM_VERSION + ". It is no longer necessary to paste the data."),gbc);
-	    panel.add(new JLabel("Just copy the AS400 data and (later) open this program."),gbc);
+	    //panel.add(new JLabel("This is version " + SecurityEnsurer.PROGRAM_VERSION + ". It is no longer necessary to paste the data."),gbc);
+	    //panel.add(new JLabel("Just copy the AS400 data and (later) open this program."),gbc);
+	    panel.add(new JLabel("This is version " + SecurityEnsurer.PROGRAM_VERSION + ". Use Refresh button to reload the application."),gbc);
 	    
 	    /**
 	     * @since 1.5
@@ -143,10 +152,14 @@ public abstract class BeginInputForm {
            j = 0;
         }
         /***********************************************************************/
-	    
-	    int result = JOptionPane.showConfirmDialog(null, panel, "afti-lab-8",
-	        JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
-	    if (result == JOptionPane.OK_OPTION) {
+        
+        UIManager.put("Button.background", Color.BLACK);
+        
+        Object[] options1 = { "Start", "Exit", "Refresh", "Exit and open Excel" };
+        
+	    int result = JOptionPane.showOptionDialog(null, panel, "afti-lab-8",
+	        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options1, null);
+	    if (result == JOptionPane.YES_OPTION) {
 	    	
 	    	/**@since 1.5*/
 	    	AppInputRuntimeInterfacer.only_u = only_u_cbx.isSelected();
@@ -195,7 +208,20 @@ public abstract class BeginInputForm {
 		    		showInferer();
 	    		}
 	    	}
-	    } else {
+	    } else if (result == 1) {
+	    	// exit with Exit button
+	    	System.exit(0);
+	    } else if (result == 2) {
+	    	BeginInputForm.show();
+	    } else if (result == 3) {
+	    	try {
+				Desktop.getDesktop().open(BeginMain.file);
+				System.exit(0);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	    }else {
+	    	// exit with X (-1) or others
 	    	System.exit(0);
 	    }
 	}
@@ -526,4 +552,20 @@ public abstract class BeginInputForm {
         return ret;
     }
 	
+	/**
+	 * rename ST (lower case) cells in S (lower case), only if user want to
+	 */
+	public static void renameSTtoS() {
+		int dialogButton = JOptionPane.YES_NO_OPTION;
+		int dialogResult = JOptionPane.showConfirmDialog (null, "Would you like to convert (previous) ST in S?", "Warning", dialogButton);
+		if(dialogResult == JOptionPane.YES_OPTION){
+			// i used to go along y
+			for (int i = 0; i <= AppExcelInterfacer.pointer; i++) {
+				// k text of the cell (of i)
+				String k = AppExcelInterfacer.read(i, 1);
+				if (k.equals("st"))
+					AppExcelInterfacer.write(i, 1, "s");
+			}
+		}
+	}
 }

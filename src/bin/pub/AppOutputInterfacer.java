@@ -58,8 +58,15 @@ public abstract class AppOutputInterfacer {
 					String a = AppInputRuntimeInterfacer.get(i,j);
 					a = a.replace(",00","");
 					a = a.replace(",0","");
-					a = a.replace(".00","");
-					a = a.replace(".0","");
+					//a = a.replace(".00","");
+					//a = a.replace(".0","");
+					/**
+					 * Removed parseInt error on "1.000,00" caused by "."
+					 * @since September 2019
+					 */
+					
+					a = a.replace(".","");
+					System.out.println(a + "***********************");
 					row[j + 2] = a;
 				}
 			}
