@@ -12,8 +12,6 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import java.awt.event.ActionEvent;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,8 +19,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import javax.swing.DropMode;
-import javax.swing.Icon;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 //import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -49,7 +45,7 @@ public abstract class BeginInputForm {
 	// dati di runtime grezzi. Lavorati: {@link AppInputRuntimeInterfacer}
 	
 	private static int JROWS = 500;
-	private static final int JCOL = 10;
+	private static final int JCOL = 11;
 	public static JTable jtable;
 	
 	/**
@@ -63,14 +59,14 @@ public abstract class BeginInputForm {
 	
 	/**
 	 * show input form
-	 */
+	 */     
 	public static void show() {
 		jtable = new JTable(JROWS,JCOL);
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		gbc.anchor = GridBagConstraints.WEST;
-		
+		          
 		//JTextField field0 = new JTextField("-SEversion=8 -debug=false");
 	    
 		jtable = new JTable(JROWS,JCOL);
@@ -83,7 +79,7 @@ public abstract class BeginInputForm {
 	    jtable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 	    
 	    JPanel panel = new JPanel(new GridBagLayout());
-	    panel.add(new JLabel("afti-lab-8 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"),gbc);
+	    panel.add(new JLabel("afti-lab-8 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"),gbc);
 	    //panel.add(new JLabel("Parametri speciali:"),gbc);
 	    //panel.add(field0,gbc);
 	    //panel.add(new JLabel("Try copying the data before opening this program."),gbc);
