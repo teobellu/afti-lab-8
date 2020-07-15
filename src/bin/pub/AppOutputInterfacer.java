@@ -25,7 +25,7 @@ public abstract class AppOutputInterfacer {
 	 * Index column T
 	 * @since 1.5
 	 */
-	private static final int INDEX_FIRST_CODE_ORDER_CLIENT = 19;;
+	private static final int INDEX_FIRST_CODE_ORDER_CLIENT = 19;
 	
 	/**
 	 * Prepara l'output a partire dall'input, solo lo spazio e i dati di input (nome prodotto).

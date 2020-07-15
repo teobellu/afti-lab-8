@@ -45,7 +45,7 @@ public abstract class BeginInputForm {
 	// dati di runtime grezzi. Lavorati: {@link AppInputRuntimeInterfacer}
 	
 	private static int JROWS = 500;
-	private static final int JCOL = 11;
+	private static final int JCOL = 12;
 	public static JTable jtable;
 	
 	/**
@@ -156,6 +156,27 @@ public abstract class BeginInputForm {
 	    int result = JOptionPane.showOptionDialog(null, panel, "afti-lab-8",
 	        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options1, null);
 	    if (result == JOptionPane.YES_OPTION) {
+	    	
+	    	// ** SINCE V3.0
+	    	/**@since v 3*/
+	    	// Union city with cap
+	    	for(int r = 0; r < usedRows(); r++) {
+	    		@SuppressWarnings("unused")
+	    		String addressNew = (String) jtable.getModel().getValueAt(r, 10);
+	    		String city = (String) jtable.getModel().getValueAt(r, 3);
+	    		String cap = (String) jtable.getModel().getValueAt(r, 11);
+	    		if (cap == null || cap.equals(""))
+	    			continue;
+	    		
+	    		//delete the cap preliminary
+				jtable.getModel().setValueAt("", r, 11);
+				
+	    		if (city == null || city.equals("") || city.subSequence(0, 1).equals("("))
+	    			continue;
+	    		String unionCityCap = "(" + cap + ") " + city;
+				jtable.getModel().setValueAt(unionCityCap, r, 3);
+			}
+	    	
 	    	
 	    	/**@since 1.5*/
 	    	AppInputRuntimeInterfacer.only_u = only_u_cbx.isSelected();
