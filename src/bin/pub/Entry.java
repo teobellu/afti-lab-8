@@ -62,6 +62,8 @@ public class Entry {
 	@SuppressWarnings("unused")
 	@Deprecated
 	private List<Box> alaiseBoxes(List<Box> boxes, int numOfBoxes) {
+		List<Box> boxesWithDiv = new ArrayList<>();
+		
 		int qInTheSmallerBox = div + 1;
 		for(Box box : boxes) {
 			/**
@@ -84,6 +86,7 @@ public class Entry {
 				continue;
 			}
 			else {
+				boxesWithDiv.add(box);
 				boxWithDiv++;
 			}
 		}
@@ -104,6 +107,11 @@ public class Entry {
 		
 		// case 20 20 20 20 5
 		if (boxWithNoDiv == 1) {
+			
+			// controllo se ha senso
+			if (boxWithDiv*magicalSpace < qInTheSmallerBox)
+				return boxes;
+			
 			Box badBox = null;
 			for(Box box : boxes) {
 				if (box.getTotalQuantity() == qInTheSmallerBox) {
@@ -112,6 +120,25 @@ public class Entry {
 			}
 			// from 5 to 1 1 1 1 1
 			List<Box> badBoxes = iterativeSplitting(badBox);
+			
+			for (Box bb : badBoxes) {
+				String badsize = bb.intern.keySet().iterator().next(); 
+				done: for (Box b : boxesWithDiv) {
+					if (!boxes.contains(b))
+						continue;
+					if (b.scale == 1) {
+						b.intern.put(badsize, b.intern.get(badsize) + 1);
+						break done;
+					}
+					else {
+						// TODO
+					}
+					// TODO
+				}
+			}
+			
+			
+			
 			boxes.remove(badBox);
 			boxes.addAll(badBoxes);
 			
@@ -303,6 +330,7 @@ public class Entry {
 		// qui ho tutte quantità sotto il 20
 		// lo scale sarà per forza 1
 		
+		/** TODO OPTIMIZATION */
 		for(int divi = div; divi >= 0; divi--) {
 			if (rqtmap.isEmpty()) 
 				return boxes;

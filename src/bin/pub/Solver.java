@@ -131,9 +131,62 @@ class EntryList {
 	public List<Box> convert(){
 		List<Box> boxes = new ArrayList<Box>();
 		for (Entry en : elements) {
-			boxes.addAll(en.computeBoxes());
+			List<Box> boxesForTheEntry = en.computeBoxes();
+			boxes.addAll(boxesForTheEntry);
+			
 		}
 		return boxes;
+	}
+	
+//	public List<Box> convert(){
+//		List<Box> boxes = new ArrayList<Box>();
+//		for (Entry en : elements) {
+//			/**
+//			 * after 3.1 was only boxes.addAll(en.computeBoxes())
+//			 * now we want to optimize the calculus
+//			 * 
+//			 * try 20 as default size
+//			 * then, try 21 as default size
+//			 * 
+//			 * if 21 leads in fewer boxes (cardinality/number) use 21, otherwise 20
+//			 * 
+//			 * @since 3.1
+//			 */
+//			List<Box> boxesForTheEntry = en.computeBoxes();
+//			List<Box> boxesForTheEntryCheating = null;
+//			
+//			if ((int)(en.div*0.1f) < 1)
+//				;
+//			else {
+//				en.div++;
+//				for(String size : en.qtmap.keySet()) {
+//					en.rqtmap.put(size, en.qtmap.get(size));
+//				}
+//				boxesForTheEntryCheating = en.computeBoxes();
+//				en.div--;
+//			}
+//			
+//			if (boxesForTheEntryCheating == null) {
+//				boxes.addAll(boxesForTheEntry);
+//			}
+//			else if (calcBoxsInList(boxesForTheEntryCheating) < calcBoxsInList(boxesForTheEntry)) {
+//				boxes.addAll(boxesForTheEntryCheating);
+//			}
+//			else {
+//				boxes.addAll(boxesForTheEntry);
+//			}
+//			
+//		}
+//		return boxes;
+//	}
+	
+	@SuppressWarnings("unused")
+	private int calcBoxsInList(List<Box> boxes) {
+		int t = 0;
+		for (Box b : boxes) {
+			t += b.scale;
+		}
+		return t;
 	}
 
 }

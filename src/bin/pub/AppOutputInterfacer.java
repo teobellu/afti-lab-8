@@ -32,7 +32,7 @@ public abstract class AppOutputInterfacer {
 	 */
 	public static void prepareOutputSpace() {
 		rows = AppInputRuntimeInterfacer.rows;
-		cols = 48;
+		cols = 55;
 		outputTableData = new ArrayList<String[]>();
 		
 		for (int i = 0; i < rows; i++) {
@@ -50,6 +50,7 @@ public abstract class AppOutputInterfacer {
 			
 			for (int j = 0; j < AppInputRuntimeInterfacer.cols; j++) {
 				row[j + 2] = AppInputRuntimeInterfacer.get(i,j);
+				
 				if (j == 9) {
 					/**
 					 * Removed parseInt error on "13,0" caused by ","
@@ -70,6 +71,22 @@ public abstract class AppOutputInterfacer {
 					row[j + 2] = a;
 				}
 			}
+			
+			/**
+			 * rimuove la riga, tra parentesi, nel codice dell'ordine
+			 * https://stackoverflow.com/questions/32471046/
+			 * java-regex-remove-text-between-and-including-parenthesis-from-string
+			 * @since 3.1
+			 */
+			row[3] = row[3].replaceAll(" *\\(.+?\\)", "");
+			
+			// move note OAQORD INDIRIZZO OMDCOM
+			/** @since 3.1 */
+			for (int s = 0; s <= 2; s++) {
+				row[50+s] = row[12+s];
+				row[12+s] = "";
+			}
+			
 			
 			outputTableData.add(row);
 		}

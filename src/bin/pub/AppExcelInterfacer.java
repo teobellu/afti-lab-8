@@ -199,7 +199,7 @@ public abstract class AppExcelInterfacer {
 			/**
 			 * This is part is available @since 1.1
 			 */
-			for (int i = 0; i < 44 + 3 /**the +3 is @since 1.2*/; i++) {
+			for (int i = 0; i < 50 + 3 /**the +3 is @since 1.2*/; i++) {
 				AppExcelInterfacer.Advanced.ensure(pointer,i);
 				CellStyle oldStyle = sheet.getRow(pointer).getCell(i).getCellStyle();
 				CellStyle r = wb.createCellStyle(); //B2
@@ -214,7 +214,7 @@ public abstract class AppExcelInterfacer {
 			/**
 			 * This part is deprecated @since 1.1
 			 */
-		    for (int i = 0; i < 44; i++) {
+		    for (int i = 0; i < 50; i++) {
 		    	AppExcelInterfacer.Advanced.ensure(pointer,i);
 		    	if (Arrays.binarySearch(BLUES, i) >= 0) // contains
 		    	{
