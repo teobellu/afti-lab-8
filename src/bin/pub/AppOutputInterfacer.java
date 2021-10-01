@@ -115,6 +115,7 @@ public abstract class AppOutputInterfacer {
 			/**@since September 2019*/
 			sumElementsInTheRedCol += box.scale;
 			
+			// Etichette U
 			if (box.intern.size() == 1) {
 				for (String key : box.intern.keySet()) { // 1 iter
 					rowData[0] = "U";
@@ -127,9 +128,17 @@ public abstract class AppOutputInterfacer {
 					 * @since 1.2
 					 */
 					rowData[45] = AppInputCompileTimeInterfacer.boxAdditionInfoes.getOrDefault(product, "");
+					
+					/** @since 3.2 */
+					rowData[43] 
+							= AppInputRuntimeInterfacer
+							.consumerCodeBySize
+							.get(product)
+							.get(key);
 				}
 				
 			}
+			// Etichette T
 			else {
 				int idx = 0;
 				int countSizes = 0;
