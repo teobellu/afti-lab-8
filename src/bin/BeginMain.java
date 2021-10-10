@@ -36,7 +36,7 @@ public abstract class BeginMain {
 		
 		 //set Workbook
 		AppExcelInterfacer.switchSheet(0); //open first sheet
-	    AppExcelInterfacer.scrollDownGetFirstEmptyRow(2); //set pointer
+	    AppExcelInterfacer.scrollDownGetFirstEmptyRow(7); //set pointer
 	    BeginInputForm.renameSTtoS();
 	    
 	    //Utilizer.jwrite();
@@ -80,7 +80,7 @@ public abstract class BeginMain {
 	public static void flowmain(String[] args) throws Exception{
 		 //set Workbook
 		AppExcelInterfacer.switchSheet(0); //open first sheet
-	    AppExcelInterfacer.scrollDownGetFirstEmptyRow(2); //set pointer
+	    AppExcelInterfacer.scrollDownGetFirstEmptyRow(7); //set pointer
 	    //Utilizer.jwrite();
 	    //Utilizer.jinvoke();
 	    Solver.run();
